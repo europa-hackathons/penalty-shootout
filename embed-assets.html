@@ -51,6 +51,7 @@ $('game').onchange=$('imgs').onchange=upd;
 
 // biggest size (width, height) we keep for each kind of picture
 function limits(n){
+  if(n.startsWith('tutorial'))return[256,256];
   if(n.startsWith('kicker'))return n.endsWith('-kick')?[400,280]:[400,330];
   if(n.startsWith('boss'))return n.endsWith('-dive')?[400,300]:[363,320];
   if(n.startsWith('keeper'))return[600,300];

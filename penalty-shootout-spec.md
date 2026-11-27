@@ -1,6 +1,6 @@
 # Penalty Shootout: Game Design Spec (v0.4)
 
-Prepared for Bryn and the two young game developers, who are building this game together. Status: the game is built and playable, and this spec is updated as it changes.
+Prepared for Bryn and the two young game developers, who are building this game together. Status: the game is built and playable, with nine bosses and an ending, and this spec is updated as it changes.
 
 ## 1. Vision
 
@@ -36,6 +36,15 @@ Both platforms use the same two actions, so the game feels identical everywhere.
 - On mobile the game asks the player to turn the phone sideways (landscape). The screen scales to fit any size.
 - All buttons are large enough for small fingers.
 
+Camera controls (optional): players can use their hand instead of a mouse or touch. The home screen asks "How do you want to play?" with two cards, Mouse / touch (press M or Space) and Camera (press C). Mouse and keys keep working at any time.
+
+- **Tutorial:** choosing Camera opens a four-step tutorial: show your hand, point to aim, make a fist to start the ring, and open your hand to kick. Each step is ticked off when the camera sees it. A "Skip tutorial" button (or Esc) goes straight to team selection.
+- **Playing:** point with the index finger to aim, make a fist to start the ring (the aim locks to where the finger was just before the fist), and open the hand when the ring is on the green to kick.
+- **Menus:** with the camera on, a white cursor follows the index finger. Point at a button and hold still for about a second (a ring fills) to press it, on the home, team and tutorial screens. On screens with no button (boss intro, level result, game complete) make a fist to continue. After the game ends, pointing at the Camera card again goes straight to team selection. The first choice of Camera still needs a click or the C key, because the camera is not running yet and the browser asks for permission.
+- **Timing:** a webcam is slower than a click, so the green zone is about 40% wider with the camera on, and the kick timing is shifted back by a delay (120 ms to start, adjustable with [ and ] while playing).
+- **Privacy and setup:** hand tracking (Google MediaPipe) runs in the browser, and no video is recorded or uploaded. The camera is off by default. It needs https or localhost, and internet access to load the tracking library and model, so it does not work from a file opened directly or from the published artifact link.
+- **Credit:** parts of the tracking approach (smoothing, spike rejection and the zoomed crop) are adapted from the BDOU hackathon game, with permission from its creators.
+
 ## 5. The timing ring
 
 A ring closes in on the ball. Where the ring is when you kick decides the shot.
@@ -65,7 +74,7 @@ Starting values to tune during playtesting.
 | 6 to 8 | Quick | Fast | Remembers your favourite side | Narrow | Fast |
 | 9 and up | Very quick | Very fast | Learns your habits | Very narrow | Very fast |
 
-- Every **3rd level (3, 6, 9, 12 and so on) is a boss keeper fight, designed together by the whole team. See the boss table below**.
+- Every **3rd level (3, 6, 9 and so on up to 27) is a boss keeper fight, designed together by the whole team. See the boss tables below**.
 - Keepers have small tells (for example, leaning before a dive), so sharp players can learn to read them.
 - A keeper can never be perfect: a green shot into a top corner always has a chance of going in.
 
@@ -81,6 +90,17 @@ Each boss gets a name, a costume or monster look, and one signature move. Bryn a
 | 12 | The Titan | A giant robot goalkeeper | Teleports to where you aim, unless you hit green |
 | 15 | Gargoyle Gus | A stone statue that comes to life | Stays frozen until you kick, then slams across the goal |
 
+Bosses, continued:
+
+| Level | Boss name | Costume or monster | Signature move |
+| --- | --- | --- | --- |
+| 18 | Phantom Phil | A friendly ghost goalkeeper | Flickers in and out, and turns solid just before the kick |
+| 21 | Clockwork Clown | A wind-up toy clown made of brass and tin | The timing ring speeds up and slows down |
+| 24 | Hydra Hugo | A friendly three-headed monster | One of the three heads sleeps on each kick, and a shot into its third of the goal cannot be saved. The awake heads save everything except green shots |
+| 27 | Zorp the Alien | A green alien with a magnet | Pulls shots halfway toward the middle unless they are green |
+
+Zorp is the final boss. Beating him ends the game: a screen says "You beat the game! Congratulations! Time to go pro.", and a tap returns to the home screen.
+
 Boss fight presentation:
 
 - **Intro card:** a boss level opens with a red banner showing "BOSS FIGHT", the boss's name, a one-line description and the boss's picture. It starts the level on a tap or space after a short pause, or by itself after 4 seconds.
@@ -93,7 +113,7 @@ Boss fight presentation:
 - 5 kicks per level. Score 3 or more goals to win it; with fewer than 3 you lose the level and play it again.
 - A scoreboard shows 5 dots (green for a goal, red for a miss or a save).
 - Each profile remembers the highest level reached and the best score per level.
-- Levels never run out: the difficulty keeps rising up to a cap.
+- The game ends after the final boss at level 27, with a congratulations screen that says it is time to go pro.
 
 ## 8. National team looks
 
@@ -110,7 +130,7 @@ Boss fight presentation:
 3. **Level select or Next level.** Shows progress.
 4. **The pitch.** Goal, keeper, ball, aim target, timing ring and scoreboard.
 5. **Boss intro.** Boss levels only: the banner with the boss's name, description and picture.
-6. **Level result.** Win or retry, with confetti on a win.
+6. **Level result.** Win or retry, with confetti on a win. After the final boss, a congratulations screen says the game is won.
 7. **Settings.** Music on or off, effects on or off.
 
 ## 10. Audio
@@ -130,7 +150,7 @@ Boss fight presentation:
 
 ## 12. Technical approach
 
-- The game is a single HTML file (penalty-shootout-hd.html) with plain JavaScript and the canvas. The audio is synthesised in the browser, and images are built into the file with embed-assets.html. No libraries or installs.
+- The game is a single HTML file (penalty-shootout-fixed.html) with plain JavaScript and the canvas. The audio is synthesised in the browser, and images are built into the file with embed-assets.html. No libraries or installs.
 - One input system based on pointer events, which covers mouse and touch.
 - The canvas scales to the screen size, in landscape.
 - Profiles and progress are stored in the browser on the device.
@@ -151,7 +171,7 @@ Version 2 then swaps the drawn shapes for realistic image files and final boss a
 
 ## 14. Assets
 
-The game loads images from an `assets` folder placed next to `penalty-shootout-hd.html`. If an image is missing, the game keeps using the drawn version, so images can be added one at a time and the game never breaks. Pictures from the assets folder only show when the game is run from a computer. To make them show on a phone or a shared link, build them into the game file (see below).
+The game loads images from an `assets` folder placed next to `penalty-shootout-fixed.html`. If an image is missing, the game keeps using the drawn version, so images can be added one at a time and the game never breaks. Pictures built into the game file work on a phone or a shared link. Pictures in the assets folder only show when the game is run from a computer, so to make a picture show everywhere, build it into the game file (see below).
 
 | File | What it shows | Notes |
 | --- | --- | --- |
@@ -162,7 +182,7 @@ The game loads images from an `assets` folder placed next to `penalty-shootout-h
 | keeper-stand.png | Goalkeeper facing us, arms spread | Transparent background, vertical 1:2 |
 | keeper-dive-left.png | Goalkeeper in a dive to his left | Transparent background, wide 2:1. The game flips it for the right side |
 
-Boss pictures: boss-rexo.png, boss-kraken.png, boss-frostbite.png, boss-titan.png and boss-gus.png, one standing picture per boss.
+Boss pictures: boss-rexo.png, boss-kraken.png, boss-frostbite.png, boss-titan.png, boss-gus.png, boss-phil.png, boss-clown.png, boss-hugo.png and boss-zorp.png, one standing picture per boss. Every boss also has a dive picture (boss-NAME-dive.png) and its own stadium (stadium-NAME-boss.jpeg), where NAME is rexo, kraken, frostbite, titan, gus, phil, clown, hugo or zorp.
 
 Boss dive pictures: each boss can also have a dive picture, drawn diving to the left. The game flips it for dives to the right, as it does for the human keeper, and draws it about 1.35 times as wide as the boss's standing picture is tall. Until a boss has one, the game tilts its standing picture into the dive.
 
@@ -173,6 +193,10 @@ Boss dive pictures: each boss can also have a dive picture, drawn diving to the 
 | boss-frostbite-dive.png | Frostbite diving to his left | Transparent background, wide 2:1 |
 | boss-titan-dive.png | The Titan diving to his left | Transparent background, wide 2:1 |
 | boss-gus-dive.png | Gargoyle Gus diving to his left | Transparent background, wide 2:1 |
+
+Optional pictures with Hydra Hugo's sleeping head: three versions of his standing picture, one for each head that can be asleep: boss-hugo-sleep-left.png, boss-hugo-sleep-middle.png and boss-hugo-sleep-right.png (left and right as the player sees them). The game uses the matching one while Hugo stands. The game also tints the sleeping head's third of the goal blue and shows "Zzz" over it.
+
+Optional tutorial pictures for the camera tutorial: tutorial-point.png, tutorial-fist.png and tutorial-open.png, one hand picture for each step.
 
 Team and stadium pictures:
 

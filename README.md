@@ -2,7 +2,7 @@
 
 A football penalty-shootout game that runs in the browser on laptop and phone. You are the kicker and the computer is the goalkeeper. Each level has 5 kicks and you need 3 goals to clear it. Every third level is a boss fight, there are nine bosses, and beating the last one at level 27 ends the game. You can play with a mouse, touch or keys, or with your hand through a webcam. English and Swedish text.
 
-Built by Bryn and two young developers. The whole game is one HTML file with plain JavaScript and a canvas. There are no libraries to install, no build step and no server (except for the camera, see below).
+Built by Bryn and two young developers Miles and Maxim. The whole game is one HTML file with plain JavaScript and a canvas. There are no libraries to install, no build step and no server (except for the camera, see below).
 
 ## Run it
 
